@@ -23,11 +23,21 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 # OPENAI API Key初始化設定
 openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_type = "azure"
+openai.api_base = os.getenv("OPENAI_API_BASE")
+openai.api_version = "2023-03-15-preview"
 
 
 def GPT_response(text):
     # 接收回應
-    response = openai.Completion.create(model="text-davinci-003", prompt=text, temperature=0.5, max_tokens=500)
+    response = openai.Completion.create(  engine="gpt-35-turbo",
+      essages = [{"role":"system","content":"You are an AI assistant that helps people find information."}],
+      temperature=0.7,
+      max_tokens=2500,
+      top_p=0.95,
+      frequency_penalty=0,
+      presence_penalty=0,
+      stop=None)
     print(response)
     # 重組回應
     answer = response['choices'][0]['text'].replace('。','')
